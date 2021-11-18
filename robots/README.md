@@ -1,0 +1,1 @@
+Run build.sh once to set kernal rules and build the docker container. After that, just run run.sh. You may need to give these files executable permissions.
