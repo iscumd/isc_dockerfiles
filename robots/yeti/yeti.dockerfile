@@ -5,11 +5,13 @@
 #TODO mount dev folder and make sure lidar can pass through.
 
 FROM osrf/ros:foxy-desktop
+FROM stereolabs/zed:3.6-devel-cuda11.4-ubuntu20.04
+
 
 SHELL ["/bin/bash", "-c"]
 
 # Allow for choosing the brach to build on TODO make this the correct default branch
-ARG branch=ros2-nav2
+ARG branch=ros2
 ENV branch ${branch}
 
 # Make root's password 1234
@@ -20,22 +22,27 @@ RUN useradd --create-home --shell /bin/bash isc -p 1234
 RUN echo 'isc:1234' | chpasswd 
 RUN adduser isc sudo
 
-# Install tools
+# install tools
 RUN sudo apt-get update && sudo apt-get install git wget python3-vcstool curl -y
 
 # Install system deps
-RUN sudo apt-get update && sudo apt install libgflags-dev -y
+RUN sudo apt-get update && sudo apt-get install libgflags-dev -y
 
 # Source setup file
 USER isc
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
 
-# Move into workspace
-RUN mkdir /home/isc/workspace/src -p
-WORKDIR /home/isc/workspace/
+# Move into workspac
+USER root
+RUN mkdir -p ros2_ws/src 
+WORKDIR ros2_ws/src
+RUN cd ../
 
 # Clone the Mammoth repo and all dependancies.
 RUN vcs import src --input https://raw.githubusercontent.com/iscumd/Mammoth/${branch}/mammoth.repos
+
+# Clone the ZED ros2 wrapper
+RUN https://github.com/stereolabs/zed-ros2-wrapper.git
 
 # We don't need no gazebo in prod
 RUN cd src/mammoth && rm -rf mammoth_gazebo
