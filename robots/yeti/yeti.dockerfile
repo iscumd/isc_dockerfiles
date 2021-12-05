@@ -2,8 +2,6 @@
 # This file is quite WIP as yeti does not yet have a final folder structure so we cannot
 # Make a ton of assumptions on how we launch it. Dependancies should be done though.
 
-#TODO mount dev folder and make sure lidar can pass through.
-
 FROM osrf/ros:foxy-desktop
 
 SHELL ["/bin/bash", "-c"]
@@ -31,9 +29,8 @@ USER isc
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
 
 # Move into workspac
-USER root
-RUN mkdir -p ros2_ws/src 
-WORKDIR ros2_ws
+RUN mkdir -p /home/isc/ros2_ws/src 
+WORKDIR /home/isc/ros2_ws/
 
 # Clone the Mammoth repo and all dependancies.
 RUN vcs import src --input https://raw.githubusercontent.com/iscumd/Mammoth/${branch}/mammoth.repos
@@ -51,4 +48,4 @@ RUN source /opt/ros/foxy/setup.bash && \
     source install/setup.bash 
 
 # Start Yeti!
-#TODO add entrypoint here when we get the final launchfile path
+ENTRYPOINT [ "ros2", "launch", "./src/mammoth_snowplow/launch/mammoth.launch.py" ]
