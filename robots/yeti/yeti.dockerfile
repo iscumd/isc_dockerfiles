@@ -44,8 +44,7 @@ RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Build the repo
 RUN source /opt/ros/foxy/setup.bash && \
-    colcon build && \ 
-    source install/setup.bash 
+    colcon build
 
 # Start Yeti!
-ENTRYPOINT source /opt/ros/foxy/setup.bash && ros2 launch "/home/isc/ros2_ws/src/mammoth_snowplow/launch/mammoth.launch.py"
+ENTRYPOINT source /opt/ros/foxy/setup.bash && source ./install/setup.bash && ros2 launch mammoth_snowplow mammoth.launch.py
