@@ -48,4 +48,4 @@ RUN source /opt/ros/foxy/setup.bash && \
     source install/setup.bash 
 
 # Start Yeti!
-ENTRYPOINT [ "ros2", "launch", "./src/mammoth_snowplow/launch/mammoth.launch.py" ]
+ENTRYPOINT source /opt/ros/foxy/setup.bash && ros2 launch "/home/isc/ros2_ws/src/mammoth_snowplow/launch/mammoth.launch.py"
