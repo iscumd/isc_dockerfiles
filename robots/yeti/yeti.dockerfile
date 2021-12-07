@@ -22,8 +22,11 @@ RUN adduser isc sudo
 RUN sudo apt-get update && sudo apt-get install git wget python3-vcstool curl -y
 
 # Install system deps
-RUN sudo apt-get update && sudo apt-get install libgflags-dev -y
-
+RUN sudo apt-get update && sudo apt-get install libgflags-dev -y 
+RUN sudo apt-get update && sudo apt-get install ros-foxy-ros2-ouster -y 
+RUN sudo apt-get update && sudo apt-get install ros-foxy-realsense2-camera -y 
+RUN sudo apt-get update && sudo apt-get install ros-foxy-joint-state-publisher  -y 
+ 
 # Source setup file
 USER isc
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
@@ -35,17 +38,13 @@ WORKDIR /home/isc/ros2_ws/
 # Clone the Mammoth repo and all dependancies.
 RUN vcs import src --input https://raw.githubusercontent.com/iscumd/Mammoth/${branch}/mammoth.repos
 
-# We don't need no gazebo in prod
-RUN cd src/mammoth && rm -rf mammoth_gazebo
-
 USER root
 RUN rosdep update 
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Build the repo
 RUN source /opt/ros/foxy/setup.bash && \
-    colcon build && \ 
-    source install/setup.bash 
+    colcon build
 
 # Start Yeti!
-ENTRYPOINT source /opt/ros/foxy/setup.bash && ros2 launch "/home/isc/ros2_ws/src/mammoth_snowplow/launch/mammoth.launch.py"
+ENTRYPOINT source /opt/ros/foxy/setup.bash && source ./install/setup.bash && ros2 launch mammoth_snowplow mammoth.launch.py
