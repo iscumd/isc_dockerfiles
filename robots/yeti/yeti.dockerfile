@@ -1,12 +1,10 @@
 # File: Builds and runs a production version of Yeti
-# This file is quite WIP as yeti does not yet have a final folder structure so we cannot
-# Make a ton of assumptions on how we launch it. Dependancies should be done though.
 
 FROM osrf/ros:foxy-desktop
 
 SHELL ["/bin/bash", "-c"]
 
-# Allow for choosing the brach to build on TODO make this the correct default branch
+# Allow for choosing the brach to build on.
 ARG branch=ros2
 ENV branch ${branch}
 
@@ -22,16 +20,13 @@ RUN adduser isc sudo
 RUN sudo apt-get update && sudo apt-get install git wget python3-vcstool curl -y
 
 # Install system deps
-RUN sudo apt-get update && sudo apt-get install libgflags-dev -y 
-RUN sudo apt-get update && sudo apt-get install ros-foxy-ros2-ouster -y 
-RUN sudo apt-get update && sudo apt-get install ros-foxy-realsense2-camera -y 
-RUN sudo apt-get update && sudo apt-get install ros-foxy-joint-state-publisher  -y 
- 
+RUN sudo apt-get update && sudo apt-get install libgflags-dev ros-foxy-ros2-ouster ros-foxy-realsense2-camera  ros-foxy-joint-state-publisher -y 
+
 # Source setup file
 USER isc
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
 
-# Move into workspac
+# Move into workspace
 RUN mkdir -p /home/isc/ros2_ws/src 
 WORKDIR /home/isc/ros2_ws/
 
