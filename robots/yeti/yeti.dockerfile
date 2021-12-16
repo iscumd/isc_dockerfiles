@@ -34,6 +34,11 @@ WORKDIR /home/isc/ros2_ws/
 RUN vcs import src --input https://raw.githubusercontent.com/iscumd/Mammoth/${branch}/mammoth.repos
 
 USER root
+
+# Copy in fast-dds config to disable shared memory, force UDP communication. This allows for connections with the host.
+COPY ./dds-fix.xml ../fastrtps-profile.xml
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/home/isc/fastrtps-profile.xml
+
 RUN rosdep update 
 RUN rosdep install --from-paths src --ignore-src -r -y
 

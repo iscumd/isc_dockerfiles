@@ -30,6 +30,10 @@ WORKDIR /home/isc/ros2_ws/
 USER root
 RUN rosdep update 
 
+# Copy in fast-dds config to disable shared memory, force UDP communication. This allows for connections with the host.
+COPY ./dds-fix.xml ../fastrtps-profile.xml
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/home/isc/fastrtps-profile.xml
+
 # Start Yeti, after building from the mounted code.
 ENTRYPOINT source /opt/ros/foxy/setup.bash && \
      rosdep install --from-paths src --ignore-src -r -y && \
