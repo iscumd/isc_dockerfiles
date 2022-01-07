@@ -1,0 +1,1 @@
+Run build.sh once to set kernal rules and build the docker container. After that, just run run.sh. You may need to give these files executable permissions. Rviz and other node based tools should function as normal, even on the host. This is because networking between the container and host are shared, and the entire /dev/ directiory is mounted in the docker container.
